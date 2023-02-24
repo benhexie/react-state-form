@@ -10,6 +10,7 @@ const FormformJSONer = (formJSON, formArgs) => {
     }
     const [state, setState] = useState({})
     const idList = useRef(new Set())
+    const [event, setEvent] = useState({})
 
     const Form = Array.isArray(formJSON[0]) ? 
         formJSON.map((form, index) => <FormBundler 
@@ -18,6 +19,7 @@ const FormformJSONer = (formJSON, formArgs) => {
                 state={{state, setState}}
                 idList={idList}
                 formArgs={formArgs}
+                event={event}
             />) : 
         <form {...formArgs}>
             {formJSON.map((block, index) => <FormBlock 
@@ -25,10 +27,11 @@ const FormformJSONer = (formJSON, formArgs) => {
                 block={block}
                 state={{state, setState}}
                 idList={idList}
+                event={event}
             />)}
         </form>
 
-    return [Form, {state, setState}]
+    return [Form, {state, setState}, {event, setEvent}]
 }
 
 export default FormformJSONer

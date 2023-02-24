@@ -3,7 +3,7 @@ import otherElements from "./otherElements";
 import formStyles from "./styles/formStyles";
 import targetElements from "./targetElements";
 
-const FormBlock = ({block, state, idList}) => {
+const FormBlock = ({block, state, idList, event}) => {
     idList = idList.current;
     // 'block' MUST be an object
     if (typeof block !== 'object' || Array.isArray(block))
@@ -35,12 +35,12 @@ const FormBlock = ({block, state, idList}) => {
             switch (props.type?.toLowerCase()) {
                 case 'checkbox':
                 case 'radio':
-                
                     break;
                 
                 case 'button':
                 case 'submit':
-                    content = template(buttonController(props.type))
+                    content = template({onChange: () => {}, ...styleFormatter(props), 
+                                        ...event[id]})
                     break;
             
                 default:
@@ -68,7 +68,7 @@ const FormBlock = ({block, state, idList}) => {
         break;
 
         case 'button':
-            content = template(buttonController(props.type))
+            content = template({...styleFormatter(props), ...event[id]})
             break;
 
         default:
@@ -80,25 +80,6 @@ const FormBlock = ({block, state, idList}) => {
             {content && content}
         </Fragment>
     )
-
-    function buttonController(type) {
-        if (type.toLowerCase() === 'submit') {
-            const {preventDefault=true, ...otherButtonArgs} = props
-            return {
-                onChange: () => {},
-                onClick: (e) => {
-                    preventDefault && e.preventDefault()
-                    console.log(`Button ${id} says hello.`)
-                },
-                ...styleFormatter(otherButtonArgs),
-            }
-        } else {
-            return {
-                onClick: () => console.log(`Button ${id} says hello.`),
-                ...styleFormatter(props),
-            }
-        }
-    }
 
     // Handles adding styles in order of precedence
     function styleFormatter(props) {
